@@ -1,9 +1,9 @@
 {
   "scripts": {
-    "init": "npm i; git clone https://github.com/iiljazi/erasure; git clone https://github.com/iiljazi/hades",
-    "build": "rm -rf dist && esbuild ./LambdaFX/* --entry-names=[dir]/[name]/index --bundle --minify --sourcemap --platform=node --target=node20.16 --outdir=dist; cd erasure && mvn package",
-    "package": "mkdir assets; cp erasure/target/fec-0.0.1-SNAPSHOT.jar assets; cd dist && for f in * ; do ([ -d \"$f\" ] && cd $f && zip ../$f.zip *.js && mv ../$f.zip ../../assets) ; done; cd ..; rm -rf hades/assets/; mv assets hades/assets; cd hades; git add .; git commit -m 'updating assets'; git push origin main; cd ..;" ,
-    "clean": "rm -rf node_modules hades erasure dist assets",
+    "init": "npm i; git clone https://github.com/symclouds/fec; git clone https://github.com/symclouds/hades",
+    "build": "rm -rf dist && esbuild ./LambdaFX/* --entry-names=[dir]/[name]/index --bundle --minify --sourcemap --platform=node --target=node20.16 --outdir=dist; cd fec && mvn package",
+    "package": "mkdir assets; cp fec/target/fec-0.0.1-SNAPSHOT.jar assets; cd dist && for f in * ; do ([ -d \"$f\" ] && cd $f && zip ../$f.zip *.js && mv ../$f.zip ../../assets) ; done; cd ..; rm -rf hades/assets/; mv assets hades/assets; cd hades; git add .; git commit -m 'updating assets'; git push origin main; cd ..;" ,
+    "clean": "rm -rf node_modules hades fec dist assets",
     "package:unbundled": "rm -rf node_modules unbundled.zip && npm i --only=prod && zip -r unbundled.zip src/* node_modules/*",
     "package:large": "rm -rf node_modules large.zip && npm i && zip -r large.zip src/* node_modules/*",
     "predeploy": "npm i && npm run build && npm run package:unbundled && npm run package:large",
