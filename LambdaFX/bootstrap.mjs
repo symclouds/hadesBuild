@@ -1,5 +1,5 @@
 import { CreateAccessKeyCommand, DeleteAccessKeyCommand, ListAccessKeysCommand, IAMClient } from "@aws-sdk/client-iam";
-import { GetRestApisCommand, APIGatewayClient } from "@aws-sdk/client-api-gateway";
+import { GetRestApisCommand, APIGatewayClient, GetApiKeysCommand } from "@aws-sdk/client-api-gateway";
 
 // Configure AWS SDK
 const iamClient = new IAMClient({});
@@ -62,13 +62,36 @@ export const handler = async (event) => {
   const key = await iamClient.send(command);
   const newAccessKeyId = key.AccessKey.AccessKeyId;
   const newSecretAccessKey = key.AccessKey.SecretAccessKey;
+
+  // Get the API KEY for the erasure api
+  let apiKey;
+  input = { // GetApiKeysRequest
+    position: null,
+    limit: Number("10"),
+    includeValues: true
+  };
+  command = new GetApiKeysCommand(input);
+  response = await apiClient.send(command);
+  // Loop over all returned keys and find the one named 'hades'
+  response.items.forEach(key => {
+      if(key.name === 'hades') {
+        apiKey = key.value;
+      }
+  });
+
+  // Get the storage ID from the environment variables 
+  // it will be base64 encoded
+  let storageID = process.env.storageID;
+
   
   // Generate Return json data structure
   const result = {
     endpointUri: stageURI,
     accessKeyId: newAccessKeyId,
     accessKeySecret: newSecretAccessKey,
-    region: region
+    region: region,
+    apiKey: apiKey,
+    storageID: storageID
   }
   
   // Print return string to console for cases that it needs to be copied
