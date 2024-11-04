@@ -6,9 +6,9 @@ const iamClient = new IAMClient({});
 const apiClient = new APIGatewayClient({});
 
 // Constants
-const apiName = "erasure";
-const stageName = "fec"
-const iamUser = "api-user";
+const apiName = "hades";
+const stageName = "hades"
+const iamUser = "hades-user";
 const region = process.env.AWS_REGION;
 
 export const handler = async (event) => {
@@ -117,6 +117,6 @@ export const handler = async (event) => {
   // Catch and throw errors
   catch (e)
   {
-    console.log("Failure In Sending E-Mail!", e);
+    console.log("Failure to return bootstrap string! " +  e);
   }
 };
